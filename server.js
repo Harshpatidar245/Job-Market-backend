@@ -4,6 +4,7 @@ const cors = require('cors');
 const dotenv = require('dotenv');
 const path = require('path');
 const session = require('express-session');
+const cookieParser = require('cookie-parser'); // ✅ for handling cookies
 
 // Route imports
 const authRoutes = require('./routes/auth');
@@ -15,32 +16,45 @@ dotenv.config();
 
 const app = express();
 
-// Middleware
+// ======== MIDDLEWARE =========
+
+// CORS setup
 app.use(cors({
-  origin: `${process.env.REACT_APP_FRONTEND_URL}`, // your Vite frontend URL
-  credentials: true
+  origin: process.env.REACT_APP_FRONTEND_URL, // e.g., 'https://job-portal-frontend.onrender.com'
+  credentials: true,
 }));
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(cookieParser()); // ✅ Enable cookie parsing
 
-// Session configuration for OAuth
+// ======== SESSION SETUP =========
+app.use(session({
+  secret: process.env.SESSION_SECRET , // replace in .env
+  resave: false,
+  saveUninitialized: false,
+  cookie: {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === 'production', // true only in production with HTTPS
+    sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
+    maxAge: 1000 * 60 * 60 * 24, // 1 day
+  }
+}));
 
-
-// Serve uploaded files
+// ======== STATIC FILES =========
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
-
-// Routes
+// ======== ROUTES =========
 app.use('/api/auth', authRoutes);
 app.use('/api/jobs', (req, res, next) => {
   console.log('Job route hit!');
   next();
-}, require('./routes/jobs'));
+}, jobRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/applications', applicationRoutes);
 
-// MongoDB connection
-mongoose.connect(process.env.MONGODB_URI || 'mongodb+srv://harshpatidar2400:Ha1ncML1D3hR1V5n@cluster0.3j7qi.mongodb.net/jobportal?retryWrites=true&w=majority&appName=Cluster0', {
+// ======== DATABASE =========
+mongoose.connect(process.env.MONGODB_URI , {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 })
@@ -50,12 +64,13 @@ mongoose.connect(process.env.MONGODB_URI || 'mongodb+srv://harshpatidar2400:Ha1n
 })
 .catch(err => console.error('MongoDB connection error:', err));
 
-// Error handling middleware
+// ======== ERROR HANDLER =========
 app.use((err, req, res, next) => {
   console.error(err.stack);
   res.status(500).json({ message: 'Something went wrong!' });
 });
 
+// ======== START SERVER =========
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
