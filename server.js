@@ -17,7 +17,7 @@ const app = express();
 
 // Middleware
 app.use(cors({
-  origin: 'http://localhost:5173', // your Vite frontend URL
+  origin: `${process.env.REACT_APP_FRONTEND_URL}`, // your Vite frontend URL
   credentials: true
 }));
 app.use(express.json());
