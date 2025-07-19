@@ -20,7 +20,7 @@ const app = express();
 
 // CORS setup
 app.use(cors({
-  origin: process.env.REACT_APP_FRONTEND_URL, // e.g., 'https://job-portal-frontend.onrender.com'
+  origin: "http://localhost:5173", // e.g., 'https://job-portal-frontend.onrender.com'
   credentials: true,
 }));
 
