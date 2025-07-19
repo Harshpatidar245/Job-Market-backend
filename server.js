@@ -15,7 +15,7 @@ const applicationRoutes = require('./routes/applications');
 dotenv.config();
 
 const app = express();
-
+console.log("hello");
 // ======== MIDDLEWARE =========
 
 // CORS setup
