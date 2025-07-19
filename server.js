@@ -20,7 +20,7 @@ const app = express();
 
 // CORS setup
 app.use(cors({
-  origin: `${process.env.FRONTEND_URL}`, // e.g., 'https://job-portal-frontend.onrender.com'
+  origin: `${process.env.VITE_FRONTEND_URL}`, // e.g., 'https://job-portal-frontend.onrender.com'
   credentials: true,
 }));
 
