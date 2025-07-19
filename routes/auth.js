@@ -546,7 +546,7 @@ router.post("/register", async (req, res) => {
         }
         <br />
         <div style="text-align: center; margin-top: 30px;">
-          <a href="http://localhost:5173" style="padding: 10px 20px; background-color: #4CAF50; color: white; text-decoration: none; border-radius: 5px;">Go to Dashboard</a>
+          <a href="https://global-job-market.vercel.app" style="padding: 10px 20px; background-color: #4CAF50; color: white; text-decoration: none; border-radius: 5px;">Go to Dashboard</a>
         </div>
         <p style="margin-top: 40px; font-size: 13px; color: #aaa; text-align: center;">
           If you did not register on our platform, you can safely ignore this email.
